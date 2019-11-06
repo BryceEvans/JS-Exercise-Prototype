@@ -39,8 +39,21 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name
+  this.age = age
+  this.stomach = []
+}
+Person.prototype.eat = function (someFood) {
+  if (this.stomach.length < 10) {
+    this.stomach.push(someFood)
+  }
+}
+Person.prototype.poop = function () {
+  this.stomach.length = 0
+}
+Person.prototype.toString = function () {
+  return `${this.name}, ${this.age}`
 }
 
 /*
@@ -57,9 +70,36 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, milesPerGallon) {
+  this.tank = 0
+  this.odometer = 0
+  this.model = model
+  this.milesPerGallon = milesPerGallon
 }
+Car.prototype.fill = function(gallons) {
+  // console.log(this.tank)
+  // console.log(gallons)
+  // this.tank = this.tank + gallons
+  this.tank += gallons
+}
+Car.prototype.drive = function(distance) {
+  const gallonsUsed = distance / this.milesPerGallon
+  // how many gallons needed to drive inputted distance
+
+  if (this.tank - gallonsUsed <= 0) {
+    const average = (this.tank - gallonsUsed) * this.milesPerGallon * -1
+    // gets the gallons used and conversts to distance
+    this.tank = 0 
+    // resets tahnk after running out of gas
+    this.odometer += distance - average
+    //removes tha amount of drivable miles
+    return `I ran out of fuel at ${this.odometer} miles!`
+  }
+  //if we have enough gas then adjust odometer and tank as normal
+  this.odometer += distance
+  this.tank -= gallonsUsed
+}
+
 
 /*
   TASK 3
@@ -68,18 +108,26 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
-
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age)
+  // binding this to Person, passing in arguments to fulfill the parent properties
+  this.favoriteToy = favoriteToy
 }
+Baby.prototype = Object.create(Person.prototype)
+// manually telling Baby about Person
+Baby.prototype.play = function() {
+  return `Playing with ${this.favoriteToy}`
+}
+// making a method special to Baby
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Global Binding - window
+  2. Implicit Binding - binding refers to the object that you are calling a method on
+  3. New Binding - making a new instance of a class - refers to the new instance
+  4. Explicit Binging - explicitly point something to a different value diandra.sayHi.call({name: 'Steve'})
 */
 
 
